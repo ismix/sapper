@@ -227,9 +227,12 @@ async function _export({
 			// parse link rel=preload headers and embed them in the HTML
 			const link = parseLinkHeader(response.headers.get('Link') || '');
 			link.refs.forEach((ref: Ref) => {
-				if (ref.rel === 'preload' || ref.rel === 'modulepreload') {
+				if (ref.rel === 'preload') {
 					body = (body as string).replace('</head>',
 						`<link rel=${JSON.stringify(ref.rel)} as=${JSON.stringify(ref.as)} href=${JSON.stringify(ref.uri)}></head>`);
+				} else if (ref.rel === 'modulepreload') {
+					body = (body as string).replace('</head>',
+						`<link rel=${JSON.stringify(ref.rel)} as=${JSON.stringify(ref.as)} href=${JSON.stringify(ref.uri)} crossorigin="use-credentials"></head>`);
 				}
 			});
 
